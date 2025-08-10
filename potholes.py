@@ -4,12 +4,12 @@ from PIL import Image
 import numpy as np
 
 
-st.write('Classifier')
-classes=['bump','crack','potholes','road']
+st.title('POTHOLE-DETECTION')
+classes=['bump','potholes']
 
 @st.cache_resource
 def load_model():
-    model=tensorflow.keras.models.load_model('pothole_model.h5')
+    model=tensorflow.keras.models.load_model('new_pothole_model.h5')
     return model
 
 model=load_model()
@@ -21,13 +21,13 @@ def preprocess(image:Image.Image):
     return img
 
 upload_f=st.file_uploader('Choose an image ', type=['jpg','jpeg','png','webp'])
-
 if upload_f:
     #st.write('File Uploaded')
     image=Image.open(upload_f)
     st.image(image,caption='Uploaded Image')
-    processed=preprocess(image)
-    pred=model.predict(processed)[0]
-    class_index=np.argmax(pred)
-    pred_class=classes[class_index]
-    st.success(f'Prediction : {pred_class}')
+    if st.button('Analyze'):
+        processed=preprocess(image)
+        pred=model.predict(processed)[0]
+        class_index=np.argmax(pred)
+        pred_class=classes[class_index]
+        st.success(f'Prediction : {pred_class}')
